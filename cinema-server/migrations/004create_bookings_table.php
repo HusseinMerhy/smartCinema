@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../connection/connection.php';
+require "../connection/db.php";
 
 $query = "CREATE TABLE IF NOT EXISTS bookings (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -12,11 +12,10 @@ $query = "CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE
 )";
 
-$execute = $mysqli->prepare($query);
-
-if ($execute->execute()) {
-    echo "Table 'bookings' created successfully or already exists.\n";
+$execute = $conn->prepare($query);
+if ($execute && $execute->execute()) {
+    echo "Table 'bookings' created successfully.\n";
 } else {
-    echo "Error creating table 'bookings': " . $mysqli->error . "\n";
+    echo "Error creating table 'bookings': " . $conn->error . "\n";
 }
 ?>
