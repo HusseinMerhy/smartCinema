@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --main-color: #e50914; 
+    --bg-color: #0f0c29; 
+    --container-bg-color: #1a1a3a;
+    --text-color: #fff;
+}
+
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+.auth-container {
+    background-color: var(--container-bg-color);
+    padding: 4rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    border: 2px solid red;
+}
+
+.auth-container .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.auth-container .logo .bx {
+    color: var(--main-color);
+    font-size: 2.5rem;
+}
+
+.auth-container h1 {
+    color: rgb(255, 255, 255);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.input-group { 
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 1rem 40px 1rem 20px; /* Make space for the icon */
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid #4a4a6a;
+    border-radius: 10px;
+    color: var(--text-color);
+    font-size: 1rem;
+    outline: none; 
+    transition: all 0.3s ease;
+}
+
+#toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.logo{
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-form input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.auth-form input:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+.auth-btn { 
+    margin-top: 2rem;
+    padding: 15px 50px;
+    font-size: 1.2rem;
+    background: var(--main-color);
+    color: var(--text-color);
+    border-radius: 10px; 
+    font-weight: 500;
+    text-decoration: none;
+    border: none; 
+    cursor: pointer; 
+    align-self: center; 
+    transition: background-color 0.4s, transform 0.4s;
+}
+
+.auth-form .btn:hover {
+    background-color: #f6121D;
+    transform: translateY(-2px);
+}
+
+.form-footer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-footer a {
+    color: var(--main-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+#error-message {
+    color: #ff4d4d;
+    margin-top: 1rem;
+    min-height: 20px;
+    font-weight: 500;
+}

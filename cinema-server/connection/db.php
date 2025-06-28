@@ -1,14 +1,11 @@
-<?php
-    $servername = "localhost"; 
-    $username = "root";        
-    $password = "";            
-    $dbname = "smart_cinema"; 
-    $conn = new mysqli($servername, $username, $password, $dbname);
+<?php 
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    } else {
-         echo "Connected successfully to the smart_cinema database!";
-    }
+$db_host = "localhost";
+$db_name = "smart_cinema"; // Ensure this matches your database name
+$db_user = "root"; 
+$db_pass = null;
 
-?>
+$conn= new mysqli($db_host, $db_user, $db_pass, $db_name);
+if($conn) {
+        echo "Database connection successful.";
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Knox Cinema</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head> 
+<body>
+<!-- In login.html AND register.html -->
+<body>
+    <div id="toast-container"></div>
+    <!-- The rest of your content (header, form-container, etc.) -->
+    <div class="auth-container">
+        <h1>Create Account</h1>
+        
+        <form class="auth-form" id="register-form">
+            <div class="input-group">
+                <input type="text" id="name" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <input type="tel" id="phone" name="phone" placeholder="📞 Phone number" pattern="[0-9]{8,15}" maxlength="15" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+                <i class='bx bx-show' id="toggle-password"></i>
+            </div>
+            <div id="form-message"></div>
+            <button type="submit" class="auth-btn">Sign up</button>
+        </form>
+  
+        <div id="error-message"></div>
+
+        <div class="form-footer">
+            <p>Already have an account? <a href="login.html">Login</a></p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../scripts/auth.js"></script>
+</body>
+</html>
