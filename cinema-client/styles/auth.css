@@ -1,0 +1,107 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #141414; /* Dark cinema theme */
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Auth Container */
+.auth-container {
+    background-color: #1f1f1f;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-container h1 {
+    margin-bottom: 24px;
+    font-size: 2rem;
+    color: #e50914; /* Brand color */
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #cccccc;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    background-color: #333;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #e50914;
+}
+
+/* Button Styling */
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e50914;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+    background-color: #f40612;
+}
+
+/* Helper Text & Links */
+.auth-switch-link {
+
+    margin-top: 20px;
+    color: #cccccc;
+}
+
+.auth-switch-link a {
+    color: #e50914;
+    text-decoration: none;
+    font-weight: bold;  
+}
+
+.auth-switch-link a:hover {
+    text-decoration: underline;
+}
+
+/* Error Message Styling */
+.error-message {
+    background-color: rgba(229, 9, 20, 0.2);
+    color: #f40612;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    display: none; /* Hidden by default */
+    border: 1px solid #e50914;
+}
