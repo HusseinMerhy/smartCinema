@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking & Showtimes - SmartCinema</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/booking.css">
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="logo"><i class='bx bxs-movie'></i>Knox Cinema</a>
+        </header>
+
+    <main class="booking-container">
+        <div id="booking-header">
+            <h1 id="movie-title-booking">Loading...</h1>
+            <p class="sub-heading">Select a format and time</p>
+        </div>
+
+        <div class="showtimes-container" id="showtimes-container">
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <div class="seating-chart-container" id="seating-chart-container" style="display: none;">
+            <h2 class="section-title-booking">Select Your Seats</h2>
+            <div class="screen-ui">
+                <div class="screen">SCREEN</div>
+                <div class="seat-legend">
+                    <div><div class="seat"></div> Available</div>
+                    <div><div class="seat selected"></div> Selected</div>
+                    <div><div class="seat booked"></div> Booked</div>
+                </div>
+            </div>
+            <div id="seating-chart"></div>
+        </div>
+
+        <div class="booking-summary" id="booking-summary" style="display: none;">
+            <h2 class="section-title-booking">Your Selection</h2>
+            <p><strong>Movie:</strong> <span id="summary-movie-title"></span></p>
+            <p><strong>Time:</strong> <span id="summary-show-time"></span></p>
+            <p><strong>Seats:</strong> <span id="summary-seats">None</span></p>
+            <p><strong>Total Price:</strong> $<span id="summary-price">0.00</span></p>
+            <button class="btn booking-confirm-btn" id="confirm-booking-btn" disabled>Confirm Booking</button>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="../scripts/apiService.js"></script>
+    <script type="module" src="../scripts/booking.js"></script>
+</body>
+</html>
