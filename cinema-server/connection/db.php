@@ -1,14 +1,18 @@
 <?php
-    $servername = "localhost"; 
-    $username = "root";        
-    $password = "";            
-    $dbname = "smart_cinema"; 
-    $conn = new mysqli($servername, $username, $password, $dbname);
+// connection/db.php
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    } else {
-         echo "Connected successfully to the smart_cinema database!";
-    }
+$host     = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'smartcinema';
 
-?>
+$conn = new mysqli($host, $username, $password, $database);
+if ($conn->connect_error) {
+    // Stop execution on fatal error
+    http_response_code(500);
+    die(json_encode([
+      'status'  => 'error',
+      'message' => 'DB connection failed: '.$conn->connect_error
+    ]));
+}
+
