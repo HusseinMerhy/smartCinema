@@ -1,7 +1,7 @@
 <?php
 // cinema-server/database/migrations/012_create_genres_table.php
 
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../connection/db.php';
 
 $sql = "CREATE TABLE IF NOT EXISTS genres (
     id INT AUTO_INCREMENT PRIMARY KEY,

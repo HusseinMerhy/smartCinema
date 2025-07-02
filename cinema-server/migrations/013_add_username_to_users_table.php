@@ -1,7 +1,6 @@
 <?php
 // cinema-server/database/migrations/014_add_username_to_users_table.php
-
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../connection/db.php';
 
 $tableName = 'users';
 $columnName = 'username';

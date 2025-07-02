@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../connection/db.php';
 $sql = "CREATE TABLE IF NOT EXISTS booked_seats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     booking_id INT NOT NULL,

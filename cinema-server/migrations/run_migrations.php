@@ -2,20 +2,20 @@
 require_once __DIR__ . '/../connection/db.php';
 echo "--- Starting Database Migrations ---\n\n";
 
-$migration_files = [
-    'migrations/001_create_users_table.php',
-    'migrations/002_create_movies_table.php',
-    'migrations/003_create_movie_casts_table.php',
-    'migrations/004_create_movie_trailers_table.php',
-    'migrations/005_create_movie_ratings_table.php',
-    'migrations/006_create_cinema_halls_table.php',
-    'migrations/007_create_showtimes_table.php',
-    'migrations/008_create_bookings_table.php',
-    'migrations/009_create_booked_seats_table.php',
-    'migrations/010_add_role_to_users_table.php',
-    'migrations/011_create_genres_table.php',
-    'migrations/012_create_user_favorite_genres_table.php',
-    'migrations/013_add_username_to_users_table.php' // The new file
+ $migration_files = [
+    '001_create_users_table.php',
+    '002_create_movies_table.php',
+    '003_create_movie_casts_table.php',
+    '004_create_movie_trailers_table.php',
+    '005_create_movie_ratings_table.php',
+    '006_create_cinema_halls_table.php',
+    '007_create_showtimes_table.php',
+    '008_create_bookings_table.php',
+    '009_create_booked_seats_table.php',
+    '010_add_role_to_users_table.php',
+    '011_create_genres_table.php',
+    '012_create_user_favorite_genres_table.php',
+    '013_add_username_to_users_table.php'
 ];
 
 try {

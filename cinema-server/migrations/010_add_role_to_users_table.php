@@ -1,7 +1,7 @@
 <?php
 // cinema-server/database/migrations/011_add_role_to_users_table.php
 
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../connection/db.php';
 
 $tableName = 'users';
 $columnName = 'role';

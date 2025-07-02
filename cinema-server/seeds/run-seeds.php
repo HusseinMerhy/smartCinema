@@ -5,13 +5,14 @@
 require_once __DIR__ . '/../connection/db.php';
 
 // Include all seeder files which contain the seed functions
-require_once __DIR__ . '/seeds/001_seed_movies.php';
-require_once __DIR__ . '/seeds/002_seed_movie_casts.php';
-require_once __DIR__ . '/seeds/003_seed_movie_trailers.php';
-require_once __DIR__ . '/seeds/004_seed_movie_ratings.php';
-require_once __DIR__ . '/seeds/005_seed_cinema_halls.php';
-require_once __DIR__ . '/seeds/006_seed_showtimes.php';
-require_once __DIR__ . '/seeds/007_seed_genres.php';
+// Include all seeder files which contain the seed functions
+require_once __DIR__ . '/001_seed_movies.php';
+require_once __DIR__ . '/002_seed_movie_casts.php';
+require_once __DIR__ . '/003_seed_movie_trailers.php';
+require_once __DIR__ . '/004_seed_movie_ratings.php';
+require_once __DIR__ . '/005_seed_cinema_halls.php';
+require_once __DIR__ . '/006_seed_showtimes.php';
+require_once __DIR__ . '/007_seed_genres.php';
 
 echo "--- Starting Database Seeding ---\n";
 

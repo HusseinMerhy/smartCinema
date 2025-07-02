@@ -1,7 +1,7 @@
 <?php
 // cinema-server/database/migrations/013_create_user_favorite_genres_table.php
 
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../connection/db.php';
 
 $sql = "CREATE TABLE IF NOT EXISTS user_favorite_genres (
     user_id INT NOT NULL,
