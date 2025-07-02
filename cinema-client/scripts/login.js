@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             errorContainer.style.display = 'block';
         }
     };
-    
+
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
