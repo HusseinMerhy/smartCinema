@@ -1,0 +1,78 @@
+<!--
+    Account Page (account.html)
+    - Displays user account details, profile update form, and bookings.
+    - Includes navigation, user menu, and tabbed interface for profile/bookings.
+    - Uses external CSS for styling and JS modules for API/auth/header/account logic.
+    - Shows/hides login/user menu based on authentication.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Smart Cinema</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/account.css">
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="logo"><i class='bx bxs-movie'></i>Knox Cinema</a>
+        <nav class="navbar">
+            <a href="../index.html">Home</a>
+            <a href="../index.html#movies">Movies</a>
+        </nav>
+        <div class="user-menu" id="user-menu" style="display: none;">
+            <i class='bx bxs-user-circle' id="user-icon"></i>
+            <div class="dropdown-content" id="user-dropdown">
+                <a href="account.html">My Account</a>
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </div>
+        <a href="login.html" class="btn" id="login-btn" style="display: none;">Sign In</a>
+    </header>
+
+    <main class="account-page-container">
+        <div class="account-card">
+            <div class="account-header">
+                <h1>My Account</h1>
+                <p>Manage your profile, preferences, and bookings.</p>
+            </div>
+            <div class="account-tabs">
+                <button class="tab-link active" data-tab="profile">Profile Details</button>
+                <button class="tab-link" data-tab="bookings">My Bookings</button>
+            </div>
+            <div id="account-loading" class="loading-spinner"></div>
+            <div id="profile" class="tab-content active">
+                <form id="account-form">
+                    <fieldset class="form-section">
+                        <legend>Personal Info</legend>
+                        <div class="form-group"><label for="email">Email Address</label><input type="email" id="email" disabled></div>
+                        <div class="form-group"><label for="username">Username</label><input type="text" id="username" placeholder="Choose a public username"></div>
+                        <div class="form-group"><label for="phoneNumber">Phone Number</label><input type="tel" id="phoneNumber"></div>
+                    </fieldset>
+                    <fieldset class="form-section">
+                        <legend>Change Password</legend>
+                        <div class="form-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" placeholder="Leave blank to keep current"></div>
+                        <div class="form-group"><label for="confirmPassword">Confirm New Password</label><input type="password" id="confirmPassword"></div>
+                    </fieldset>
+                    <fieldset class="form-section">
+                        <legend>Favorite Genres</legend>
+                        <div class="checkbox-grid" id="genres-container"></div>
+                    </fieldset>
+                    <button type="submit" id="update-profile-btn" class="btn update-btn">Update Profile</button>
+                </form>
+            </div>
+            <div id="bookings" class="tab-content">
+                <div id="bookings-container"></div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="../scripts/apiService.js"></script>
+    <script type="module" src="../scripts/auth.js"></script>
+    <script type="module" src="../scripts/header.js"></script>
+    <script type="module" src="../scripts/account.js"></script>
+</body>
+</html>
