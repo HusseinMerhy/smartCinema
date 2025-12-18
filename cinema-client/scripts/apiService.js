@@ -1,5 +1,5 @@
 // scripts/apiService.js
-const API_BASE_URL = 'http://localhost/smartCinema/cinema-server/api';
+const API_BASE_URL = '/cinema-server/api';
 
 export const apiService = {
     get: async (endpoint) => {
