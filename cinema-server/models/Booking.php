@@ -1,110 +1,107 @@
 <?php
 // cinema-server/models/Booking.php
 
-class Booking {
-    private $db;
-    private const MAX_TICKETS_PER_MOVIE = 4;
+require_once 'Model.php';
 
-    public function __construct(mysqli $db_connection) {
-        $this->db = $db_connection;
+class Booking extends Model {
+
+    /**
+     * Fetch all booked seats for a specific showtime
+     */
+    public function getBookedSeatsByShowtime($showtimeId) {
+        $sql = "SELECT seat_identifier FROM booked_seats WHERE showtime_id = ?";
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Database Prepare Error: " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $showtimeId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $seats = [];
+        while ($row = $result->fetch_assoc()) {
+            $seats[] = ['seat_number' => $row['seat_identifier']];
+        }
+        return $seats;
     }
 
-    public function createBooking(int $userId, int $showtimeId, array $seats, float $totalPrice): array {
+    /**
+     * Create a new booking with seats and snacks in a single transaction
+     */
+    public function createBooking($userId, $showtimeId, $seats, $snacks, $totalPrice) {
         $this->db->begin_transaction();
-        try {
-            // Step 1: Get movie_id
-            $stmt_movie = $this->db->prepare("SELECT movie_id FROM showtimes WHERE id = ?");
-            if (!$stmt_movie) throw new Exception("DB error (get movie_id)");
-            $stmt_movie->bind_param("i", $showtimeId);
-            $stmt_movie->execute();
-            $result_movie = $stmt_movie->get_result();
-            if ($result_movie->num_rows === 0) throw new Exception("Invalid showtime ID.");
-            $movie_id = $result_movie->fetch_assoc()['movie_id'];
-            $stmt_movie->close();
 
-            // Step 2: Count existing tickets for this movie
-            $stmt_count = $this->db->prepare("SELECT COUNT(bs.id) as ticket_count FROM bookings b JOIN booked_seats bs ON b.id = bs.booking_id JOIN showtimes s ON b.showtime_id = s.id WHERE b.user_id = ? AND s.movie_id = ?");
-            if (!$stmt_count) throw new Exception("DB error (count tickets)");
-            $stmt_count->bind_param("ii", $userId, $movie_id);
-            $stmt_count->execute();
-            $current_tickets = (int)$stmt_count->get_result()->fetch_assoc()['ticket_count'];
-            $stmt_count->close();
-            
-            // Step 3: Enforce the cap
-            if (($current_tickets + count($seats)) > self::MAX_TICKETS_PER_MOVIE) {
-                $this->db->rollback();
-                return ['success' => false, 'message' => "Booking failed: You cannot have more than " . self::MAX_TICKETS_PER_MOVIE . " tickets for this movie."];
-            }
-            
-            // Step 4: Check if seats are available
+        try {
+            // 1. Check if seats are already taken
             if (!empty($seats)) {
                 $placeholders = implode(',', array_fill(0, count($seats), '?'));
-                $stmt_check = $this->db->prepare("SELECT seat_identifier FROM booked_seats WHERE showtime_id = ? AND seat_identifier IN ($placeholders) FOR UPDATE");
-                $stmt_check->bind_param('i' . str_repeat('s', count($seats)), $showtimeId, ...$seats);
-                $stmt_check->execute();
-                $result = $stmt_check->get_result();
-                if ($result->num_rows > 0) {
-                    $this->db->rollback();
-                    return ['success' => false, 'message' => "Sorry, seat " . $result->fetch_assoc()['seat_identifier'] . " was just booked."];
+                $checkSql = "SELECT id FROM booked_seats WHERE showtime_id = ? AND seat_identifier IN ($placeholders)";
+                
+                $stmt = $this->db->prepare($checkSql);
+                $params = array_merge([$showtimeId], $seats);
+                $types = 'i' . str_repeat('s', count($seats));
+                $stmt->bind_param($types, ...$params);
+                $stmt->execute();
+                if ($stmt->get_result()->num_rows > 0) {
+                    throw new Exception("One or more selected seats are already booked.");
                 }
-                $stmt_check->close();
             }
 
-            // Step 5: Create booking record
-            $stmt_booking = $this->db->prepare("INSERT INTO bookings (user_id, showtime_id, total_price) VALUES (?, ?, ?)");
-            $stmt_booking->bind_param("iid", $userId, $showtimeId, $totalPrice);
-            $stmt_booking->execute();
+            // 2. Insert into bookings table
+            $stmt = $this->db->prepare("INSERT INTO bookings (user_id, showtime_id, total_price, booking_date) VALUES (?, ?, ?, NOW())");
+            $stmt->bind_param("iid", $userId, $showtimeId, $totalPrice);
+            if (!$stmt->execute()) throw new Exception("Booking insert failed: " . $stmt->error);
             $bookingId = $this->db->insert_id;
-            $stmt_booking->close();
 
-            // Step 6: Insert booked seats
-            if (!empty($seats)) {
-                $stmt_seats = $this->db->prepare("INSERT INTO booked_seats (booking_id, showtime_id, seat_identifier) VALUES (?, ?, ?)");
-                foreach ($seats as $seat) { $stmt_seats->bind_param("iis", $bookingId, $showtimeId, $seat); $stmt_seats->execute(); }
-                $stmt_seats->close();
+            // 3. Insert into booked_seats table
+            $stmt = $this->db->prepare("INSERT INTO booked_seats (booking_id, showtime_id, seat_identifier, price) VALUES (?, ?, ?, ?)");
+            $seatPrice = 10.00; // Default price
+            
+            foreach ($seats as $seat) {
+                $stmt->bind_param("iisd", $bookingId, $showtimeId, $seat, $seatPrice);
+                if (!$stmt->execute()) throw new Exception("Failed to save seat: " . $stmt->error);
+            }
+
+            // 4. Insert into booking_snacks table
+            if (!empty($snacks)) {
+                $stmt = $this->db->prepare("INSERT INTO booking_snacks (booking_id, snack_id, quantity, price_at_booking) VALUES (?, ?, ?, ?)");
+                foreach ($snacks as $s) {
+                    $stmt->bind_param("iiid", $bookingId, $s['id'], $s['quantity'], $s['price']);
+                    $stmt->execute();
+                }
             }
 
             $this->db->commit();
-            return ['success' => true, 'message' => 'Booking successful!'];
+            return ['success' => true, 'message' => 'Booking successful', 'booking_id' => $bookingId];
+
         } catch (Exception $e) {
             $this->db->rollback();
-            error_log("Booking Error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'A server error occurred.'];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
-    public function deleteBooking(int $bookingId, int $userId): array {
-        $this->db->begin_transaction();
-        try {
-            $stmt_verify = $this->db->prepare("SELECT s.show_time FROM bookings b JOIN showtimes s ON b.showtime_id = s.id WHERE b.id = ? AND b.user_id = ?");
-            $stmt_verify->bind_param("ii", $bookingId, $userId);
-            $stmt_verify->execute();
-            $result = $stmt_verify->get_result();
-            if ($result->num_rows === 0) {
-                $this->db->rollback();
-                return ['success' => false, 'message' => 'Booking not found or you do not have permission to cancel it.'];
-            }
-            $show_time = new DateTime($result->fetch_assoc()['show_time']);
-            if ($show_time < new DateTime()) {
-                $this->db->rollback();
-                return ['success' => false, 'message' => 'Cannot cancel a booking for a show that has already passed.'];
-            }
-            $stmt_verify->close();
-
-            $stmt_delete = $this->db->prepare("DELETE FROM bookings WHERE id = ?");
-            $stmt_delete->bind_param("i", $bookingId);
-            $stmt_delete->execute();
-            
-            if ($stmt_delete->affected_rows > 0) {
-                $this->db->commit();
-                return ['success' => true, 'message' => 'Booking cancelled successfully.'];
-            } else {
-                throw new Exception("Deletion failed, no rows affected.");
-            }
-        } catch (Exception $e) {
-            $this->db->rollback();
-            error_log("Delete Booking Error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'A server error occurred. Could not cancel the booking.'];
+    /**
+     * Delete a booking (Fixes PHP0418 error)
+     */
+    public function deleteBooking($bookingId, $userId) {
+        // We check for user_id to ensure users can only delete their own bookings
+        $stmt = $this->db->prepare("DELETE FROM bookings WHERE id = ? AND user_id = ?");
+        
+        if (!$stmt) {
+            return ['success' => false, 'message' => "Prepare failed: " . $this->db->error];
         }
+
+        $stmt->bind_param("ii", $bookingId, $userId);
+        
+        if ($stmt->execute()) {
+             return [
+                'success' => $stmt->affected_rows > 0,
+                'message' => $stmt->affected_rows > 0 ? "Booking deleted" : "Booking not found or unauthorized"
+             ];
+        }
+        
+        return ['success' => false, 'message' => $stmt->error];
     }
 }

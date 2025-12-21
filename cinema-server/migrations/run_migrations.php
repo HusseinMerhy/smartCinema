@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../connection/db.php';
 echo "--- Starting Database Migrations ---\n\n";
 
- $migration_files = [
+$migration_files = [
     '001_create_users_table.php',
     '002_create_movies_table.php',
     '003_create_movie_casts_table.php',
@@ -15,7 +15,8 @@ echo "--- Starting Database Migrations ---\n\n";
     '010_add_role_to_users_table.php',
     '011_create_genres_table.php',
     '012_create_user_favorite_genres_table.php',
-    '013_add_username_to_users_table.php'
+    '013_add_username_to_users_table.php',
+    '014_create_snacks_tables.php' // <--- Added this line
 ];
 
 try {

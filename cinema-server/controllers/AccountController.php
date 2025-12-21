@@ -1,6 +1,8 @@
 <?php
 // cinema-server/controllers/AccountController.php
-error_reporting(E_ALL); ini_set('display_errors', 0); ini_set('log_errors', 1);
+error_reporting(E_ALL); 
+ini_set('display_errors', 0); 
+ini_set('log_errors', 1);
 
 class AccountController {
     private $db;
@@ -27,13 +29,14 @@ class AccountController {
     }
 
     /**
-     * --- THE FIX IS HERE ---
-     * This method now uses a single, more efficient query to get all booking data at once.
+     * Fetch all bookings for a user
+     * FIXED: Changed 'booking_time' to 'booking_date' to match the database schema.
      */
     public function getBookings(int $userId) {
+        // Updated 'b.booking_time' to 'b.booking_date'
         $sql = "SELECT 
                     b.id as booking_id,
-                    b.booking_time,
+                    b.booking_date, 
                     b.total_price,
                     m.title as movie_title,
                     m.poster_url,
@@ -47,10 +50,13 @@ class AccountController {
                 LEFT JOIN booked_seats bs ON b.id = bs.booking_id
                 WHERE b.user_id = ?
                 GROUP BY b.id
-                ORDER BY s.show_time DESC";
+                ORDER BY b.booking_date DESC";
         
         $stmt = $this->db->prepare($sql);
-        if (!$stmt) { $this->sendResponse(['message' => 'Database query for bookings failed.'], 500); }
+        if (!$stmt) { 
+            // If it still fails, it might be a different column name mismatch
+            $this->sendResponse(['message' => 'Database query failed: ' . $this->db->error], 500); 
+        }
 
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -120,5 +126,11 @@ class AccountController {
         }
     }
 
-    private function sendResponse($payload, $statusCode = 200) { if(ob_get_length()) ob_clean(); http_response_code($statusCode); header('Content-Type: application/json'); echo json_encode($payload); exit(); }
+    private function sendResponse($payload, $statusCode = 200) { 
+        if(ob_get_length()) ob_clean(); 
+        http_response_code($statusCode); 
+        header('Content-Type: application/json'); 
+        echo json_encode($payload); 
+        exit(); 
+    }
 }
